@@ -29,7 +29,7 @@
 //
 
 Cypress.Commands.add('getByDataCy', (selector) => {
-  cy.get(`[data-cy^="${selector}"]`);
+  return cy.get(`[data-cy^="${selector}"]`); 
 });
 
 Cypress.Commands.add('register', (
@@ -46,15 +46,13 @@ Cypress.Commands.add('register', (
 });
 
 Cypress.Commands.add('login', (email = 'riot@qa.team',
-   password = '12345Qwert!') => { 
-    // <-- Прибрали username з параметрів, бо для логіну він не потрібен
-  cy.request('POST', '/api/users/login', { 
-    // <-- Змінено на /api/users/login для логіну
+   password = '12345Qwert!') => {
+  cy.request('POST', '/api/users/login', {
     user: {
       email,
       password
     }
-  }).then((response) => // <-- Змінено тут: додано дужки навколо "response"
+  }).then((response) => 
     { const user = {
       bio: response.body.user.bio,
       effectiveImage: 

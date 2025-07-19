@@ -27,13 +27,10 @@
   "include": [
     "next-env.d.ts", 
     "**/*.ts", "**/*.tsx", 
-    "cypress/support/commands.js", 
-    "cypress/support/commands.js", 
-    "cypress/support/e2e.js", 
-    "cypress/support/e2e.js", 
-    "cypress.config.js", 
+    "cypress/support/commands.js",
+    "cypress/support/e2e.js",
     "cypress.config.js",
-     "cypress/**/*.ts",
+    "cypress/**/*.ts",
     "cypress/**/*.js"
   ]
 }
