@@ -42,6 +42,7 @@ describe('Settings page', () => {
 
     cy.url().should('include', `/profile/${user.username}`);
     settingsPage.visit();
+    cy.get('[data-cy^="settings-bio-input"]').should('have.value', newBio);
     settingsPage.assertBioIs(newBio);
   });
 
@@ -53,6 +54,7 @@ describe('Settings page', () => {
 
     cy.url().should('include', `/profile/${user.username}`);
     settingsPage.visit();
+    cy.get('[data-cy^="settings-email-input"]').should('have.value', newEmail);
     settingsPage.assertEmailIs(newEmail);
   });
 
@@ -72,5 +74,10 @@ describe('Settings page', () => {
 
   it('should provide an ability to log out', () => {
     Page.usernameLink.should('not.exist'); 
+      cy.get('[data-cy="logout-button"]').click();
+      cy.url().should('not.include', '/settings');
+      cy.url().should('include', '/');
+      cy.contains('Sign in').should('be.visible');
+      homePage.usernameLink.should('not.exist');
   });
 });
