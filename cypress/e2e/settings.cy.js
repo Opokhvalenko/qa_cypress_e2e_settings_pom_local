@@ -22,10 +22,8 @@ describe('Settings page', () => {
   });
 
   it('should provide an ability to update username', () => {
-    // Генеруємо newUsername тут, щоб він був унікальним для кожного запуску тесту
     const newUsername = faker.internet.userName().toLowerCase()
-     + Cypress._.random(0, 1e6); 
-    // Додаємо унікальний суфікс
+     + Cypress._.random(0, 1e6);
 
     settingsPage.typeUsername(newUsername);
     settingsPage.clickUpdateSettings();
@@ -41,9 +39,7 @@ describe('Settings page', () => {
     settingsPage.clickUpdateSettings();
 
     cy.url().should('include', `/profile/${user.username}`);
-    settingsPage.visit();
-    cy.get('[data-cy^="settings-bio-input"]').should('have.value', newBio);
-    settingsPage.getBioInput().should('be.visible');
+    settingsPage.visit(); // Повертаємося, щоб перевірити відображення
     settingsPage.assertBioIs(newBio);
   });
 
@@ -55,31 +51,29 @@ describe('Settings page', () => {
 
     cy.url().should('include', `/profile/${user.username}`);
     settingsPage.visit();
-    cy.get('[data-cy^="settings-email-input"]').should('have.value', newEmail);
-    settingsPage.getEmailInput().should('be.visible');
     settingsPage.assertEmailIs(newEmail);
   });
 
   it('should provide an ability to update password', () => {
     const newPassword = faker.internet.password({
-      length: 12, upper: true, lower: true, numeric: true, symbols: true 
+      length: 12, upper: true, lower: true, numeric: true, symbols: true
     });
-    
+
     settingsPage.typePassword(newPassword);
     settingsPage.clickUpdateSettings();
 
     cy.url().should('include', `/profile/${user.username}`);
 
-    cy.login(user.email, newPassword); 
+    cy.login(user.email, newPassword);
     homePage.assertHeaderContainUsername(user.username);
   });
 
   it('should provide an ability to log out', () => {
-    Page.usernameLink.should('not.exist'); 
-      cy.get('[data-cy="logout-button"]').click();
-      cy.url().should('not.include', '/settings');
-      cy.url().should('include', '/');
-      cy.contains('Sign in').should('be.visible');
-      homePage.usernameLink.should('not.exist');
+
+      cy.get('[data-cy="logout-button"]').click(); // Припустимо, кнопка виходу має такий data-cy
+      cy.url().should('not.include', '/settings'); // Перевіряємо, що ми пішли зі сторінки налаштувань
+      cy.url().should('include', '/'); // Перевіряємо, що ми на домашній сторінці
+      cy.contains('Sign in').should('be.visible'); // Перевіряємо, що з'явилася кнопка Sign In
+      homePage.usernameLink().should('not.exist'); 
   });
 });
