@@ -43,6 +43,7 @@ describe('Settings page', () => {
     cy.url().should('include', `/profile/${user.username}`);
     settingsPage.visit();
     cy.get('[data-cy^="settings-bio-input"]').should('have.value', newBio);
+    settingsPage.getBioInput().should('be.visible');
     settingsPage.assertBioIs(newBio);
   });
 
@@ -55,6 +56,7 @@ describe('Settings page', () => {
     cy.url().should('include', `/profile/${user.username}`);
     settingsPage.visit();
     cy.get('[data-cy^="settings-email-input"]').should('have.value', newEmail);
+    settingsPage.getEmailInput().should('be.visible');
     settingsPage.assertEmailIs(newEmail);
   });
 

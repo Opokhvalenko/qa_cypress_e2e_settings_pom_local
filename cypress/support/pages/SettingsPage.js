@@ -1,7 +1,7 @@
-// cypress/support/pages/SettingsPage.js
 import PageObject from '../PageObject'; // Імпортуємо базовий PageObject
 
 class SettingsPage extends PageObject {
+  // Розміщуємо геттери на початку для кращої читабельності та коректної роботи
   get imageInput() {
     return cy.getByDataCy('settings-image-input');
   }
@@ -28,7 +28,7 @@ class SettingsPage extends PageObject {
 
   // Методи для взаємодії зі сторінкою
   visit() {
-    cy.visit('/settings'); // Шлях до сторінки налаштувань
+    cy.visit('/settings');
   }
 
   typeImage(url) {
@@ -55,17 +55,16 @@ class SettingsPage extends PageObject {
     this.updateSettingsButton.click();
   }
 
-  // Додаткові методи для перевірок (асертів)
   assertUsernameIs(username) {
     this.usernameInput.should('have.value', username);
   }
 
   assertBioIs(bio) {
-    this.bioTextarea.should('have.value', bio);
+    this.bioTextarea.should('be.visible').and('have.value', bio); 
   }
 
   assertEmailIs(email) {
-    this.emailInput.should('have.value', email);
+    this.emailInput.should('be.visible').and('have.value', email); 
   }
 
   assertPasswordIsEmpty() {
