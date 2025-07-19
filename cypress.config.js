@@ -1,5 +1,5 @@
 import { defineConfig } from 'cypress';
-import { faker } from '@faker-js/faker';
+import { faker } from '@faker-js/faker'; // Переконайся, що faker імпортовано
 import { clear } from './dataBase';
 
 module.exports = defineConfig({
@@ -9,11 +9,21 @@ module.exports = defineConfig({
       on('task', {
         generateUser() {
           let randomNumber = Math.ceil(Math.random(1000) * 1000);
-          let userName = faker.name.firstName() + `${randomNumber}`;
+          // *** ЗМІНЕНО ***
+          // Використовуємо faker.string.alpha() для літер, щоб уникнути пробілів та спецсимволів
+          // Додаємо randomNumber, щоб зробити юзернейм більш унікальним
+          let userName = faker.string.alpha({ 
+            length: 8, 
+            casing: 'lower' }) + randomNumber; 
           return {
-            username: userName.toLowerCase(),
-            email: 'test'+`${randomNumber}`+'@mail.com',
-            password: '12345Qwert!',
+            username: userName, // Використовуємо згенерований userName без додаткового .toLowerCase(), бо faker.string.alpha() вже може це робити
+            email: faker.internet.email().toLowerCase(), // Забезпечуємо унікальність та нижній регістр для пошти
+            password: faker.internet.password({ 
+              length: 12, 
+              upper: true, 
+              lower: true, 
+              numeric: true, 
+              symbols: true }), // Генеруємо надійний пароль
           };
         },
         generateArticle() {
@@ -22,7 +32,7 @@ module.exports = defineConfig({
             description: faker.lorem.words(),
             body: faker.lorem.words(),
             tag: faker.lorem.word()
-          };;
+          };
         },
         'db:clear'() {
           clear();

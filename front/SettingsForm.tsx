@@ -65,6 +65,7 @@ const SettingsForm = () => {
               placeholder="URL of profile picture"
               value={userInfo.image ? userInfo.image : ''}
               onChange={updateState('image')}
+              data-cy="settings-image-input" // <-- Додано data-cy
             />
           </fieldset>
           <fieldset className="form-group">
@@ -74,6 +75,7 @@ const SettingsForm = () => {
               placeholder="Username"
               value={userInfo.username}
               onChange={updateState('username')}
+              data-cy="settings-username-input" // <-- Додано data-cy
             />
           </fieldset>
           <fieldset className="form-group">
@@ -83,6 +85,7 @@ const SettingsForm = () => {
               placeholder="Short bio about you"
               value={userInfo.bio}
               onChange={updateState('bio')}
+              data-cy="settings-bio-textarea" // <-- Додано data-cy
             />
           </fieldset>
           <fieldset className="form-group">
@@ -92,6 +95,7 @@ const SettingsForm = () => {
               placeholder="Email"
               value={userInfo.email}
               onChange={updateState('email')}
+              data-cy="settings-email-input" // <-- Додано data-cy
             />
           </fieldset>
           <fieldset className="form-group">
@@ -102,12 +106,14 @@ const SettingsForm = () => {
               value={userInfo.password}
               onChange={updateState('password')}
               autoComplete="new-password"
+              data-cy="settings-password-input" // <-- Додано data-cy
             />
           </fieldset>
           <button
             className="btn btn-lg btn-primary pull-xs-right"
             type="submit"
             disabled={isLoading}
+            data-cy="update-settings-button" // <-- Додано data-cy
           >
             Update Settings
           </button>
