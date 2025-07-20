@@ -61,14 +61,12 @@ class SettingsPage extends PageObject {
 
   assertBioIs(bio) {
     // Додано .should('be.visible')
-    this.bioTextarea.should('be.visible',
-       { timeout: 10000 }).and('have.value', bio);
+    this.bioTextarea.should('be.visible').and('have.value', bio);
   }
 
   assertEmailIs(email) {
     // Додано .should('be.visible')
-    this.emailInput.should('be.visible',
-       { timeout: 10000 }).and('have.value', email);
+    this.emailInput.should('be.visible').and('have.value', email);
   }
 
   assertPasswordIsEmpty() {

@@ -10,7 +10,7 @@ class HomePageObject extends PageObject {
 
   assertHeaderContainUsername(username) {
     // Тепер це коректний виклик методу
-    this.usernameLink().should('be.visible', { timeout: 10000 })
+    this.usernameLink().should('be.visible')
     .and('contain', username);
   }
 }
