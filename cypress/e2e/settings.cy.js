@@ -72,6 +72,8 @@ describe('Settings page', () => {
 
       cy.get('[data-cy="logout-button"]').click(); 
       cy.url().should('not.include', '/settings'); // Перевіряємо, що ми пішли зі сторінки налаштувань
+      cy.url().should('eq', Cypress.config().baseUrl + '/');
+      cy.reload();
       cy.url().should('include', '/'); // Перевіряємо, що ми на домашній сторінці
       cy.contains('Sign in').should('be.visible'); // Перевіряємо, що з'явилася кнопка Sign In
       homePage.usernameLink().should('not.exist'); 
