@@ -70,7 +70,7 @@ describe('Settings page', () => {
 
   it('should provide an ability to log out', () => {
 
-      cy.get('[data-cy="logout-button"]').click(); // Припустимо, кнопка виходу має такий data-cy
+      cy.get('[data-cy="logout-button"]').click(); 
       cy.url().should('not.include', '/settings'); // Перевіряємо, що ми пішли зі сторінки налаштувань
       cy.url().should('include', '/'); // Перевіряємо, що ми на домашній сторінці
       cy.contains('Sign in').should('be.visible'); // Перевіряємо, що з'явилася кнопка Sign In

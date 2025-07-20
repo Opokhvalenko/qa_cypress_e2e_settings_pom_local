@@ -52,6 +52,16 @@ const SettingsForm = () => {
       Router.push(`/profile/${user.username}`)
     }
   }
+
+  // Функція для обробки виходу з системи
+  const handleLogout = async () => {
+    // Очищаємо дані користувача з локального сховища
+    localStorage.removeItem('user')
+    localStorage.removeItem('token')
+    // Перенаправляємо на головну сторінку або сторінку логіну
+    Router.push('/') // Або Router.push('/user/login')
+  }
+
   useCtrlEnterSubmit(handleSubmit)
   return (
     <React.Fragment>
@@ -65,7 +75,7 @@ const SettingsForm = () => {
               placeholder="URL of profile picture"
               value={userInfo.image ? userInfo.image : ''}
               onChange={updateState('image')}
-              data-cy="settings-image-input" // <-- Додано data-cy
+              data-cy="settings-image-input"
             />
           </fieldset>
           <fieldset className="form-group">
@@ -75,7 +85,7 @@ const SettingsForm = () => {
               placeholder="Username"
               value={userInfo.username}
               onChange={updateState('username')}
-              data-cy="settings-username-input" // <-- Додано data-cy
+              data-cy="settings-username-input"
             />
           </fieldset>
           <fieldset className="form-group">
@@ -85,7 +95,7 @@ const SettingsForm = () => {
               placeholder="Short bio about you"
               value={userInfo.bio}
               onChange={updateState('bio')}
-              data-cy="settings-bio-textarea" // <-- Додано data-cy
+              data-cy="settings-bio-textarea"
             />
           </fieldset>
           <fieldset className="form-group">
@@ -95,7 +105,7 @@ const SettingsForm = () => {
               placeholder="Email"
               value={userInfo.email}
               onChange={updateState('email')}
-              data-cy="settings-email-input" // <-- Додано data-cy
+              data-cy="settings-email-input"
             />
           </fieldset>
           <fieldset className="form-group">
@@ -106,19 +116,30 @@ const SettingsForm = () => {
               value={userInfo.password}
               onChange={updateState('password')}
               autoComplete="new-password"
-              data-cy="settings-password-input" // <-- Додано data-cy
+              data-cy="settings-password-input"
             />
           </fieldset>
           <button
             className="btn btn-lg btn-primary pull-xs-right"
             type="submit"
             disabled={isLoading}
-            data-cy="update-settings-button" // <-- Додано data-cy
+            data-cy="update-settings-button"
           >
             Update Settings
           </button>
         </fieldset>
       </form>
+
+      {/* ДОДАНО: Кнопка "Log out" */}
+      <hr /> {/* Для візуального розділення */}
+      <button
+        className="btn btn-outline-danger" // Типовий клас для кнопки виходу
+        onClick={handleLogout}
+        data-cy="logout-button" // Додаємо data-cy для Cypress
+      >
+        Or click here to logout.
+      </button>
+
     </React.Fragment>
   )
 }
