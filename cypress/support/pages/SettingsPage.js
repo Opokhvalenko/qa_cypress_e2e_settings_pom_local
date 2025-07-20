@@ -1,3 +1,5 @@
+// cypress/support/pages/SettingsPage.js
+
 import PageObject from '../PageObject'; // Імпортуємо базовий PageObject
 
 class SettingsPage extends PageObject {
@@ -24,6 +26,10 @@ class SettingsPage extends PageObject {
 
   get updateSettingsButton() {
     return cy.getByDataCy('update-settings-button');
+  }
+
+  get logoutButton() {
+    return cy.getByDataCy('logout-button');
   }
 
   // Методи для взаємодії зі сторінкою
@@ -55,22 +61,18 @@ class SettingsPage extends PageObject {
     this.updateSettingsButton.click();
   }
 
+  // Асерти для полів вводу (якщо ми перевіряємо їх значення)
   assertUsernameIs(username) {
     this.usernameInput.should('have.value', username);
   }
 
-  assertBioIs(bio) {
-    // Додано .should('be.visible')
-    this.bioTextarea.should('be.visible').and('have.value', bio);
-  }
-
-  assertEmailIs(email) {
-    // Додано .should('be.visible')
-    this.emailInput.should('be.visible').and('have.value', email);
-  }
-
   assertPasswordIsEmpty() {
     this.passwordInput.should('have.value', '');
+  }
+
+  assertBioIs(expectedBio) {
+    cy.getByDataCy(
+      'profile-bio-text').should('be.visible').and('contain', expectedBio);
   }
 }
 

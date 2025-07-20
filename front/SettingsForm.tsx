@@ -19,10 +19,30 @@ const SettingsForm = () => {
     password: '',
   })
   const loggedInUser = useLoggedInUser()
+
   React.useEffect(() => {
-    if (!loggedInUser) return
-    setUserInfo((prev) => Object.assign(prev, loggedInUser))
-  }, [loggedInUser])
+    if (loggedInUser && Object.keys(loggedInUser).length > 0) { // Перевіряємо, що loggedInUser існує і не порожній об'єкт
+      setUserInfo((prev) => ({
+        ...prev, // Зберігаємо попередній стан
+        image: loggedInUser.image || '', // Встановлюємо значення або порожній рядок, якщо воно undefined
+        username: loggedInUser.username || '',
+        bio: loggedInUser.bio || '',
+        email: loggedInUser.email || '',
+        // password не має бути тут, бо ми не хочемо заповнювати поле пароля поточним паролем
+        // loggedInUser не містить password, тому його не потрібно присвоювати.
+      }));
+    } else {
+      // Якщо користувач не залогінений, очищаємо форму або встановлюємо значення за замовчуванням
+      setUserInfo({
+        image: '',
+        username: '',
+        bio: '',
+        email: '',
+        password: '',
+      });
+    }
+  }, [loggedInUser]); // Залежність тільки від loggedInUser
+
   const updateState = (field) => (e) => {
     setUserInfo({ ...userInfo, [field]: e.target.value })
   }
@@ -33,33 +53,40 @@ const SettingsForm = () => {
     if (!user.password) {
       delete user.password
     }
-    const { data, status } = await axios.put(
-      `${apiPath}/user`,
-      JSON.stringify({ user }),
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Token ${loggedInUser?.token}`,
-        },
-      }
-    )
-    setLoading(false)
-    if (status !== 200) {
-      setErrors(data.errors.body)
-    }
-    if (data?.user) {
-      await setupUserLocalStorage(data, setErrors)
-      Router.push(`/profile/${user.username}`)
+    try { // Додаємо try-catch для обробки помилок axios
+        const { data, status } = await axios.put(
+            `${apiPath}/user`,
+            JSON.stringify({ user }),
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Token ${loggedInUser?.token}`,
+                },
+            }
+        )
+        setLoading(false)
+        if (status !== 200) {
+            setErrors(data.errors.body)
+        } else if (data?.user) {
+            await setupUserLocalStorage(data, setErrors)
+            Router.push(`/profile/${user.username}`)
+        }
+    } catch (error) {
+        setLoading(false);
+        if (error.response && error.response.data && error.response.data.errors) {
+            setErrors(error.response.data.errors.body);
+        } else {
+            setErrors(['An unexpected error occurred.']);
+        }
+        console.error("Error updating user:", error); // Логуємо помилку для налагодження
     }
   }
 
   // Функція для обробки виходу з системи
   const handleLogout = async () => {
-    // Очищаємо дані користувача з локального сховища
     localStorage.removeItem('user')
     localStorage.removeItem('token')
-    // Перенаправляємо на головну сторінку або сторінку логіну
-    Router.push('/') // Або Router.push('/user/login')
+    Router.push('/')
   }
 
   useCtrlEnterSubmit(handleSubmit)
@@ -73,7 +100,7 @@ const SettingsForm = () => {
               className="form-control"
               type="text"
               placeholder="URL of profile picture"
-              value={userInfo.image ? userInfo.image : ''}
+              value={userInfo.image || ''} // Використовуємо || '' для безпеки
               onChange={updateState('image')}
               data-cy="settings-image-input"
             />
@@ -83,7 +110,7 @@ const SettingsForm = () => {
               className="form-control form-control-lg"
               type="text"
               placeholder="Username"
-              value={userInfo.username}
+              value={userInfo.username || ''} // Використовуємо || '' для безпеки
               onChange={updateState('username')}
               data-cy="settings-username-input"
             />
@@ -93,7 +120,7 @@ const SettingsForm = () => {
               className="form-control form-control-lg"
               rows={8}
               placeholder="Short bio about you"
-              value={userInfo.bio}
+              value={userInfo.bio || ''} // Використовуємо || '' для безпеки
               onChange={updateState('bio')}
               data-cy="settings-bio-textarea"
             />
@@ -103,7 +130,7 @@ const SettingsForm = () => {
               className="form-control form-control-lg"
               type="email"
               placeholder="Email"
-              value={userInfo.email}
+              value={userInfo.email || ''} // Використовуємо || '' для безпеки
               onChange={updateState('email')}
               data-cy="settings-email-input"
             />
@@ -130,12 +157,11 @@ const SettingsForm = () => {
         </fieldset>
       </form>
 
-      {/* ДОДАНО: Кнопка "Log out" */}
-      <hr /> {/* Для візуального розділення */}
+      <hr />
       <button
-        className="btn btn-outline-danger" // Типовий клас для кнопки виходу
+        className="btn btn-outline-danger"
         onClick={handleLogout}
-        data-cy="logout-button" // Додаємо data-cy для Cypress
+        data-cy="logout-button"
       >
         Or click here to logout.
       </button>

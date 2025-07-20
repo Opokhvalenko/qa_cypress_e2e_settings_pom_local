@@ -1,17 +1,18 @@
+// cypress/support/pages/home.pageObject.js
+
 import PageObject from '../PageObject';
 
 class HomePageObject extends PageObject {
-  url = '/#/';
-
-  // ЗМІНЕНО: тепер це МЕТОД, тому додано дужки ()
-  usernameLink() { 
+  get usernameLink() {
     return cy.getByDataCy('profile-link');
   }
 
+  get signInLink() {
+    return cy.contains('Sign in');
+  }
+
   assertHeaderContainUsername(username) {
-    // Тепер це коректний виклик методу
-    this.usernameLink().should('be.visible')
-    .and('contain', username);
+    this.usernameLink.should('be.visible').and('contain', username);
   }
 }
 
